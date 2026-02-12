@@ -75,6 +75,20 @@ def test_create_todo_title_too_long(client):
     assert response.status_code == 422
 
 
+def test_update_todo_null_title_rejected(client):
+    create = client.post("/todos", json={"title": "Valid"})
+    todo_id = create.json()["id"]
+    response = client.patch(f"/todos/{todo_id}", json={"title": None})
+    assert response.status_code == 422
+
+
+def test_update_todo_null_completed_rejected(client):
+    create = client.post("/todos", json={"title": "Valid"})
+    todo_id = create.json()["id"]
+    response = client.patch(f"/todos/{todo_id}", json={"completed": None})
+    assert response.status_code == 422
+
+
 def test_partial_update_preserves_other_fields(client):
     create = client.post("/todos", json={"title": "Original"})
     todo_id = create.json()["id"]
